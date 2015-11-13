@@ -4,38 +4,9 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "8f29913cfa1df313a6bc8989c63f6f79",
-    "content-hash": "09a2c0be4b68621d619309ad98335f4a",
+    "hash": "6a2258a04d3ea1171f1066a0e83524f6",
+    "content-hash": "52bf13fc03e45496f2f057667c7ca956",
     "packages": [
-        {
-            "name": "codeigniter/framework",
-            "version": "dev-3.0-stable",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/bcit-ci/CodeIgniter.git",
-                "reference": "fe4c76e77bc9640872d34a874780031cf90dd2bd"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/bcit-ci/CodeIgniter/zipball/fe4c76e77bc9640872d34a874780031cf90dd2bd",
-                "reference": "fe4c76e77bc9640872d34a874780031cf90dd2bd",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.2.4"
-            },
-            "require-dev": {
-                "mikey179/vfsstream": "1.1.*"
-            },
-            "type": "project",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "The CodeIgniter framework",
-            "homepage": "http://codeigniter.com",
-            "time": "2015-11-09 15:44:21"
-        },
         {
             "name": "league/climate",
             "version": "3.2.0",
@@ -443,6 +414,35 @@
         }
     ],
     "packages-dev": [
+        {
+            "name": "codeigniter/framework",
+            "version": "dev-3.0-stable",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bcit-ci/CodeIgniter.git",
+                "reference": "fe4c76e77bc9640872d34a874780031cf90dd2bd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bcit-ci/CodeIgniter/zipball/fe4c76e77bc9640872d34a874780031cf90dd2bd",
+                "reference": "fe4c76e77bc9640872d34a874780031cf90dd2bd",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2.4"
+            },
+            "require-dev": {
+                "mikey179/vfsstream": "1.1.*"
+            },
+            "type": "project",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "The CodeIgniter framework",
+            "homepage": "http://codeigniter.com",
+            "time": "2015-11-09 15:44:21"
+        },
         {
             "name": "doctrine/instantiator",
             "version": "1.0.5",
@@ -1454,9 +1454,9 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "codeigniter/framework": 20,
         "projek-xyz/ci-installer": 20,
-        "markstory/mini-asset": 20
+        "markstory/mini-asset": 20,
+        "codeigniter/framework": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
