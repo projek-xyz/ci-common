@@ -1,0 +1,53 @@
+{
+    "name": "projek-xyz/ci-common",
+    "description": "Common Module for Projek.xyz CI3 Starter Kit",
+    "homepage": "http://www.projek.xyz/ci-common",
+    "type": "projek-ci-module",
+    "license": "MIT",
+    "keywords": [
+        "codeigniter", "projek-xyz-ci", "projek-ci-module", "module"
+    ],
+    "authors": [
+        {
+            "name": "Fery Wardiyanto",
+            "email": "hallo@feryardiant.me",
+            "homepage": "http://feryardiant.me",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "email": "hallo@feryardiant.me"
+    },
+    "autoload": {
+        "psr-4": {
+            "Projek\\CI\\Common\\": "src/"
+        },
+        "files": ["src/bootstrap.php"]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Projek\\CI\\Common\\Tests\\": "tests/src/"
+        }
+    },
+    "extra": {
+        "projek-module-name": "common"
+    },
+    "require": {
+        "php": ">=5.4.0",
+        "ext-mcrypt": "*",
+        "ext-mbstring": "*",
+        "codeigniter/framework": "dev-3.0-stable",
+        "projek-xyz/ci-installer": "dev-master",
+        "league/climate": "~3.2",
+        "league/flysystem": "~1.0",
+        "league/plates": "~3.1",
+        "markstory/mini-asset": "dev-master",
+        "vlucas/phpdotenv": "^2.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.0",
+        "phpunit/dbunit": "~1.4.0"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
