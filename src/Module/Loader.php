@@ -45,6 +45,37 @@ class Loader extends CI_Loader
     }
 
     /**
+     * {inheritdoc}
+     */
+    public function language($file = [], $lang = '') {
+        if (is_array($file)) {
+            foreach ($file as $langfile) {
+                $this->language($langfile, $lang);
+            }
+            return;
+        }
+
+        // Detect module
+        if (list($module, $class) = $this->module->detect($file)) {
+            // Module already loaded
+            if ($this->module->loaded($module)) {
+                return [$module, $lang];
+            }
+
+            // Add module
+            $this->module->add($this, $module);
+            // Let parent do the heavy work
+            $void = parent::language($class, $lang);
+            // Remove module
+            $this->module->remove($this);
+
+            return $void;
+        } else {
+            return parent::language($file, $lang);
+        }
+    }
+
+    /**
      * Controller Loader
      *
      * This function lets users load and hierarchical controllers to enable HMVC support
