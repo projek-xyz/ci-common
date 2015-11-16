@@ -25,8 +25,10 @@ class Views
         $this->engine = new Engine(VIEWPATH, 'php');
 
         foreach ($module->getList('module') as $mod) {
-            $this->paths[$mod->name] = $mod->path . 'mod/views/';
-            $this->engine->addFolder($mod->name, $this->paths[$mod->name]);
+            if (is_dir($mod_view = $mod->path . 'mod/views/')) {
+                $this->paths[$mod->name] = $mod_view;
+                $this->engine->addFolder($mod->name, $mod_view);
+            }
         }
 
         if ($currentModule = $module->getCurrent()) {
