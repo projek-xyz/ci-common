@@ -1,7 +1,9 @@
 <?php
 namespace Projek\CI\Common\Console;
 
+use Projek\CI\Console\Cli;
 use Projek\CI\Console\Commands;
+use Projek\CI\Console\Arguments\Manager;
 
 class Install extends Commands
 {
@@ -11,7 +13,7 @@ class Install extends Commands
     /**
      * {inheridoc}
      */
-    public function register(Console\ArgumentManager $arguments)
+    public function register(Manager $arguments)
     {
         $arguments->add([
             'help' => [
@@ -26,7 +28,7 @@ class Install extends Commands
     /**
      * {inheridoc}
      */
-    public function execute(Console $console)
+    public function execute(Cli $console)
     {
         $this->CI->load->library('migration');
 
