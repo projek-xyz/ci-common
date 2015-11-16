@@ -50,7 +50,7 @@ class Migration extends Commands
     public function execute(Cli $console)
     {
         $this->CI->load->library('migration');
-        $arguments = $console->argumentManager();
+        $arguments = $console->argument_manager();
 
         if ($arguments->defined('list')) {
             $this->get_current($console);

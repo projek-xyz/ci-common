@@ -35,7 +35,7 @@ class Install extends Commands
         if ( ! $this->CI->migration->latest()) {
             show_error($this->CI->migration->error_string());
         } else {
-            $console->greenBold('Congratulation! everything is ready to go');
+            $console->out('<green>Congratulation! everything is ready to go</green>');
         }
 
         return false;
