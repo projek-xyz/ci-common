@@ -25,20 +25,19 @@ class Migration extends Commands
             'list' => [
                 'prefix' => 'l',
                 'longPrefix' => 'list',
-                'description' => 'Display All migraiton list',
+                'description' => Cli::lang('console_migration_arg_list'),
                 'noValue' => true
             ],
             'current' => [
                 'prefix' => 'c',
                 'longPrefix' => 'current',
-                'description' => 'Display current migraiton version',
+                'description' => Cli::lang('console_migration_arg_current'),
                 'noValue' => true
             ],
             'to' => [
                 'prefix' => 't',
                 'longPrefix' => 'to',
-                'description' => 'Migrate to certain version. '
-                    .'See --list for available versions.',
+                'description' => Cli::lang('console_migration_arg_to'),
                 'castTo' => 'int'
             ]
         ]);
@@ -83,8 +82,8 @@ class Migration extends Commands
             $file = explode('_', basename($file, '.php'));
             array_shift($file);
             $table[] = [
-                'Version' => $version,
-                'File name' => implode(' ', $file),
+                Cli::lang('console_migration_label_version') => $version,
+                Cli::lang('console_migration_label_filename') => implode(' ', $file),
             ];
         }
 
@@ -96,18 +95,19 @@ class Migration extends Commands
         $current = $this->CI->migration->get_version();
 
         if ($this->is_latest()) {
-            $console->out('<green>You are already in latest version</green>');
-            return $console->out('which is: <green>'.$current.'</green>');
+            return $this->print_latest();
         }
 
-        $console->out('Your have installed version: <green>'.$current.'</green>');
-        return $console->out('Use --help for more information');
+        $console->out(
+            sprintf(Cli::lang('console_migration_label_installed'), '<green>'.$current.'</green>')
+        );
+        return $console->out(Cli::lang('console_migration_label_help'));
     }
 
     protected function jump_to($version = 0, $console)
     {
         if ($this->is_latest()) {
-            return $console->out('<green>You are already in latest version</green>');;
+            return $this->print_latest();
         }
 
         if (!$version) {
@@ -116,7 +116,9 @@ class Migration extends Commands
 
         $this->CI->migration->version($version);
 
-        return $console->out('<green>Done!</green> migrated to version '.$version);
+        return $console->out(
+            sprintf(Cli::lang('console_migration_label_migrated'), '<green>'.$version.'</green>')
+        );;
     }
 
     protected function is_latest()
@@ -125,5 +127,13 @@ class Migration extends Commands
         $latest  = $this->CI->migration->get_count();
 
         return ($current == $latest);
+    }
+
+    private function print_latest($console)
+    {
+        $console->out('<green>'.Cli::lang('console_migration_label_latest').'</green>');
+        return $console->out(
+            sprintf(Cli::lang('console_migration_label_which'), '<green>'.$current.'</green>')
+        );
     }
 }

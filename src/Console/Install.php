@@ -35,7 +35,7 @@ class Install extends Commands
         if ( ! $this->CI->migration->latest()) {
             show_error($this->CI->migration->error_string());
         } else {
-            $console->out('<green>Congratulation! everything is ready to go</green>');
+            $console->out('<green>'.Cli::lang('console_install_done').'</green>');
         }
 
         return false;
