@@ -8,7 +8,7 @@ class Cli extends Controller
     {
         parent::__construct();
 
-        $this->load->language('common/console');
+        $this->load->language('common/console_common');
 
         $this->available_commands = [
             Console\Install::class,
