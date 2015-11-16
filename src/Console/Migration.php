@@ -8,7 +8,7 @@ use Projek\CI\Console\Arguments\Manager;
 class Migration extends Commands
 {
     protected $name = 'migration';
-    protected $description = 'Manage migation database';
+    protected $description = 'lang:console_migration_desc';
 
     /**
      * {inheridoc}
@@ -19,7 +19,7 @@ class Migration extends Commands
             'help' => [
                 'prefix' => 'h',
                 'longPrefix' => 'help',
-                'description' => 'Display this help',
+                'description' => Cli::lang('console_display_help'),
                 'noValue' => true
             ],
             'list' => [

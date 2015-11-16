@@ -58,12 +58,11 @@ class Loader extends CI_Loader
         // Detect module
         if (list($module, $class) = $this->module->detect($file)) {
             // Module already loaded
-            if ($this->module->loaded($module)) {
-                return [$module, $lang];
+            if (!$this->module->loaded($module)) {
+                // Add module
+                $this->module->add($this, $module);
             }
 
-            // Add module
-            $this->module->add($this, $module);
             // Let parent do the heavy work
             $void = parent::language($class, $lang);
             // Remove module

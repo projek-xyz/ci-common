@@ -8,7 +8,7 @@ use Projek\CI\Console\Arguments\Manager;
 class Install extends Commands
 {
     protected $name = 'install';
-    protected $description = 'Run the installer';
+    protected $description = 'lang:console_install_desc';
 
     /**
      * {inheridoc}
@@ -19,7 +19,7 @@ class Install extends Commands
             'help' => [
                 'prefix' => 'h',
                 'longPrefix' => 'help',
-                'description' => 'Display this help',
+                'description' => Cli::lang('console_display_help'),
                 'noValue' => true
             ]
         ]);
