@@ -37,8 +37,7 @@
         "ext-mcrypt": "*",
         "ext-mbstring": "*",
         "projek-xyz/ci-installer": "dev-master",
-        "league/climate": "~3.2",
-        "league/flysystem": "~1.0",
+        "projek-xyz/ci-console": "dev-master",
         "league/plates": "~3.1",
         "markstory/mini-asset": "dev-master",
         "vlucas/phpdotenv": "^2.0"

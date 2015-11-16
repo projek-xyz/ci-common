@@ -12,7 +12,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |
 */
 
-$path = str_replace(FCPATH, '', CREASI_COMMON_PATH);
+$path = str_replace(FCPATH, '', PROJEK_COMMON_PATH);
 $_base = [
     'filename' => 'bootstrap.php',
     'filepath' => '../vendor/creasi/common/src'

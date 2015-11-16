@@ -1,7 +1,7 @@
 <?php
-use Projek\CI\Common\Controller\CLI as BaseCli;
+use Projek\CI\Console\Controller;
 
-class Cli extends BaseCli
+class Cli extends Controller
 {
     //
 }

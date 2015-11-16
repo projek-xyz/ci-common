@@ -2,9 +2,12 @@
 namespace Projek\CI\Common;
 
 use CI_Exceptions;
+use Projek\CI\Console\ExceptionsTrait;
 
 class Exceptions extends CI_Exceptions
 {
+    use ExceptionsTrait;
+
     private $views;
     private $_template_path;
 
@@ -97,7 +100,7 @@ class Exceptions extends CI_Exceptions
         if (is_cli()) {
             $console = new Console();
 
-            $console->error(sprintf('<underline><bold>%s</bold></underline>', $data['heading']));
+            $heading = $data['heading'];
             unset($data['heading']);
 
             $traces = [];
@@ -106,38 +109,7 @@ class Exceptions extends CI_Exceptions
                 unset($data['traces']);
             }
 
-            foreach ($data as $label => $value) {
-                if (is_array($value)) {
-                    // $value = implode(', ', $value);
-                    foreach ($value as $val) {
-                        $console->error($val);
-                    }
-                } else {
-                    $console->error($label . ' : ' . $value);
-                }
-            }
-
-            if ($traces) {
-                $console->br();
-                $console->error(sprintf('<underline><bold>%s</bold></underline>', 'Backtrace'));
-                $i = 1;
-                foreach ($traces as $error) {
-                    $line = isset($error['line']) ? $error['line'] : 'Unknown';
-                    if (isset($error['file'])) {
-                        $console->out(' '.$i.') ' . str_replace(FCPATH, './', $error['file']) . ':' . $line);
-                    } else {
-                        $i--;
-                    }
-                    $func = '';
-                    if (isset($error['class'], $error['type'])) {
-                        $func .= $error['class'].$error['type'];
-                    }
-                    $func .= $error['function'];
-                    $console->error('    ' . $func . '()');
-                    $i++;
-                }
-            }
-
+            $this->render_cli_error($heading, $data, $traces);
             exit(1);
         }
 

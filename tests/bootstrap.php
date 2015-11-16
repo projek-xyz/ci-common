@@ -34,7 +34,7 @@ function show_404($page = '', $log_error = TRUE)
  */
 
 require_once __DIR__.'/stub/index.php';
-chdir (FCPATH);
+chdir ('../');
 
 /*
  *---------------------------------------------------------------
