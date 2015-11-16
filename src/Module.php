@@ -42,6 +42,7 @@ class Module
             $location = rtrim($location, '/') . '/';
         }
 
+        $this->config->set_item('modules_available', $this->list);
         $this->config->set_item('modules_locations', $locations);
     }
 
