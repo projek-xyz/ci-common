@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f3549c74f9e557b1897107c672dc49f3",
+    "hash": "adf133966c4ba08c134b437dd14cdb7c",
     "content-hash": "2c35187af1f8a88d71cadb1739225024",
     "packages": [
         {
@@ -176,12 +176,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/projek-xyz/ci-console.git",
-                "reference": "2ce5b6cc139941a396a0863ecce80c1275c29540"
+                "reference": "41aa7e7f99191a8c5abe7dc895f9191e0a92bd3b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/projek-xyz/ci-console/zipball/2ce5b6cc139941a396a0863ecce80c1275c29540",
-                "reference": "2ce5b6cc139941a396a0863ecce80c1275c29540",
+                "url": "https://api.github.com/repos/projek-xyz/ci-console/zipball/41aa7e7f99191a8c5abe7dc895f9191e0a92bd3b",
+                "reference": "41aa7e7f99191a8c5abe7dc895f9191e0a92bd3b",
                 "shasum": ""
             },
             "require": {
@@ -223,7 +223,7 @@
                 "projek-ci-module",
                 "projek-xyz-ci"
             ],
-            "time": "2015-11-16 08:23:43"
+            "time": "2015-11-16 10:03:57"
         },
         {
             "name": "projek-xyz/ci-installer",

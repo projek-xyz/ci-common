@@ -15,7 +15,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $path = str_replace(FCPATH, '', PROJEK_COMMON_PATH);
 $_base = [
     'filename' => 'bootstrap.php',
-    'filepath' => '../vendor/creasi/common/src'
+    'filepath' => '../vendor/projek-xyz/ci-common/mod'
 ];
 
 $hook['pre_system'] = array_merge($_base, [
