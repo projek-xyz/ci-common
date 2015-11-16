@@ -176,12 +176,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/projek-xyz/ci-console.git",
-                "reference": "eecefc721f980b916393b12c8433733e06dc816f"
+                "reference": "2ce5b6cc139941a396a0863ecce80c1275c29540"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/projek-xyz/ci-console/zipball/eecefc721f980b916393b12c8433733e06dc816f",
-                "reference": "eecefc721f980b916393b12c8433733e06dc816f",
+                "url": "https://api.github.com/repos/projek-xyz/ci-console/zipball/2ce5b6cc139941a396a0863ecce80c1275c29540",
+                "reference": "2ce5b6cc139941a396a0863ecce80c1275c29540",
                 "shasum": ""
             },
             "require": {
@@ -223,7 +223,7 @@
                 "projek-ci-module",
                 "projek-xyz-ci"
             ],
-            "time": "2015-11-16 05:36:33"
+            "time": "2015-11-16 08:23:43"
         },
         {
             "name": "projek-xyz/ci-installer",
