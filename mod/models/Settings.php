@@ -1,7 +1,7 @@
 <?php
-use Projek\CI\Common\Base\Model;
+use Projek\CI\Common\Model;
 
-class Settings_model extends Model
+class Settings extends Model
 {
     public $table = 'settings';
 
