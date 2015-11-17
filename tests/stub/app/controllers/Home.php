@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-use Projek\CI\Common\Core\Controller;
+use Projek\CI\Common\Controller;
 
 class Home extends Controller
 {

@@ -19,7 +19,7 @@ php:
   - 7
 
 before_script:
-  - phpenv config-add tests/travis-config.ini
+  - phpenv config-add tests/travis-php.ini
   - mysql -e 'create database if not exists app_ci3skltn'
   - npm install -q
 
