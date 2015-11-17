@@ -13,6 +13,10 @@ Via [Composer](https://getcomposer.org/)
 $ composer require projek-xyz/ci-common --prefer-dist
 ```
 
+## Usage
+
+**SOON**
+
 ## Testing
 
 ```bash
@@ -26,10 +30,8 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) and [CONDUCT](CONDUCT.md) for details
 ## Credits
 
 - [CodeIgniter](http://codeigniter.com)
-- [CI Module Installer](https://github.com/projek-xyz/ci-installer)
 - [Plates Template](http://platesphp.com)
-- [Climate](climate.thephpleague.com)
 
 ## License
 
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+MIT © [Fery Wardiyanto](http://feryardiant.me). Please see [License File](LICENSE.md) for more information.
