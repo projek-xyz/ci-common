@@ -3,7 +3,7 @@ namespace Projek\CI\Common\Controller;
 
 use Projek\CI\Common\Controller;
 
-class Private extends Controller
+class PrivateController extends Controller
 {
     public function __construct()
     {

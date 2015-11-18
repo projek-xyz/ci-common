@@ -7,13 +7,7 @@ class Loader extends Module\Loader
     {
         parent::__construct();
 
-        $this->assets = new Assets($this->module, $this);
         $this->views = new Views($this->module);
-    }
-
-    public function asset()
-    {
-        return $this->assets;
     }
 
     public function view($view, $vars = [], $return = false)
