@@ -28,9 +28,26 @@ class Auths extends Library
      *
      * @return bool
      */
-    public function register()
+    public function register($username, $email, $password)
     {
         $this->load->model('users');
+        $new_user = $this->users->add([
+            'email'    => $email,
+            'username' => $username,
+            'display'  => $username,
+            'password' => $password,
+        ], true)
+
+        if (!$user) {
+            return false;
+        }
+
+        $this->load->model('users_details');
+
+        $details = $this->users_details->add([
+            'fullname' => $username,
+            '_request' => serialize(['activation' => $this->token()]),
+        ]);
     }
 
     // -------------------------------------------------------------------------
@@ -107,6 +124,7 @@ class Auths extends Library
      */
     public function logout()
     {
+        delete_cookie('autologin');
         // See http://codeigniter.com/forums/viewreply/662369/ as the reason for the next line
         $this->session->set_userdata([
             'user_id'     => null,
@@ -117,7 +135,6 @@ class Auths extends Library
         ]);
 
         $this->session->sess_destroy();
-        delete_cookie('autologin');
     }
 
     /**
@@ -128,6 +145,21 @@ class Auths extends Library
     public function is_logged_in()
     {
         return (bool) $this->get_current('status') === true;
+    }
+
+    // -------------------------------------------------------------------------
+    // Token
+    // -------------------------------------------------------------------------
+
+    /**
+     * Generate random 16 chars of string
+     *
+     * @return string
+     */
+    protected function random_strings()
+    {
+        $cookie_name = $this->config->item('sess_cookie_name');
+        return substr(md5(uniqid(mt_rand().$this->input->cookie($cookie_name))), 0, 16)
     }
 
     // -------------------------------------------------------------------------
