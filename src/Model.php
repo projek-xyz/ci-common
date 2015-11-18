@@ -2,8 +2,9 @@
 namespace Projek\CI\Common;
 
 use CI_Model;
+use Countable;
 
-class Model extends CI_Model
+class Model extends CI_Model implements Countable
 {
     /**
      * Make use of common traits
@@ -94,12 +95,23 @@ class Model extends CI_Model
         self::FLAG_AUTOTIMESTAMP => true,
     ];
 
+    /**
+     * Data result
+     *
+     * @var null
+     */
+    protected $_results = null;
+
+    private static $_instance;
+
     public function __construct()
     {
-        if (null !== $this->table) {
+        if (!isset($this->db)) {
             // Just in case it's not been loaded.
             $this->load->database();
+        }
 
+        if (null !== $this->table) {
             // Get list of columns from current table
             $this->cols = $this->db->list_fields($this->table);
         }
@@ -117,8 +129,20 @@ class Model extends CI_Model
             $this->load->library('encryption');
         }
 
+        self::$_instance = $this;
+
         // Log the thing
         log_message('info', 'Model '.get_called_class().' Initialized');
+    }
+
+    /**
+     * Return this model instance
+     *
+     * @return \Projek\CI\Common\Model
+     */
+    public static function instance()
+    {
+        return self::$_instance;
     }
 
     /* -----------------------------------------------------------------------
@@ -173,7 +197,17 @@ class Model extends CI_Model
 
         $term = $this->normalize_term($term);
 
-        $this->db->where($term);
+        foreach ($term as $field => $value) {
+            if (is_array($value)) {
+                $this->db->where_in($field, $value);
+            } else {
+                if (strpos($value, '%') !== false) {
+                    $this->db->like($field, str_replace('%', '', $value));
+                } else {
+                    $this->db->where($field, $value);
+                }
+            }
+        }
 
         $limit !== null || $limit = $this->data_limit;
 
@@ -188,31 +222,44 @@ class Model extends CI_Model
             return false;
         }
 
-        return 1 === $limit ? $data->row() : $data->result();
+        $this->_results = 1 === $limit ? $data->row() : $data->result();
+
+        return $this;
     }
 
     /**
      * Edit existing data
      *
-     * @param   mixed   $term  Data terms: int|array
      * @param   array   $data  Data to store
+     * @param   mixed   $term  Data terms: int|array
      * @return  mixed
      */
-    public function edit($term, array $data = [])
+    public function edit(array $data, $term = null)
     {
+        // Return false if no table defined
         if (false === $this->has_table()) return false;
 
+        // Return false if no data inserted
         if (empty($data)) {
             $this->set_error('No data to update');
             return false;
         }
 
-        if ($timestamp = $this->timestamp()) {
-            $data += $timestamp;
+        // Get modification timestamp
+        if ($timestamp = $this->timestamp('modification')) {
+            $data = array_merge($data, $timestamp);
         }
 
+        // Use old result if needed
+        if ($this->_results !== null && $term === null) {
+            $old_data = (array) $this->_results;
+            $term[$this->primary_key] = $old_data[$this->primary_key];
+        }
+
+        // Normalize
         $term = $this->normalize_term($term);
 
+        // Update data
         if ( ! $return = $this->db->update($this->table, $data, $term)) {
             $this->set_error($this->db->error());
             return false;
@@ -230,19 +277,31 @@ class Model extends CI_Model
      */
     public function del($term, $force = null)
     {
+        // Return false if no table defined
         if (false === $this->has_table()) return false;
 
+        // Wanna put a nuke?
         $force !== null or $force = $this->is_destructive;
 
-        $term = $this->normalize_term($term);
-
-        if (true === $force) {
-            $return = $this->db->delete($this->table, $term);
-        } else {
-            $return = $this->trash_it($term, true);
+        // Use old result if needed
+        if ($this->_results !== null && $term === null) {
+            $old_data = (array) $this->_results;
+            $term[$this->primary_key] = $old_data[$this->primary_key];
         }
 
-        if ( ! $return) {
+        // Normalize
+        $term = $this->normalize_term($term);
+
+        // If nuke is required? :lol:
+        if (true === $force) {
+            // Permanent deletion
+            $return = $this->db->delete($this->table, $term);
+        } else {
+            // Move it to trash can
+            $return = $this->trash_it(true, $term);
+        }
+
+        if (! $return) {
             $this->set_error($this->db->error());
             return false;
         }
@@ -266,9 +325,16 @@ class Model extends CI_Model
             return false;
         }
 
+        // Use old result if needed
+        if ($this->_results !== null && $term === null) {
+            $old_data = (array) $this->_results;
+            $term[$this->primary_key] = $old_data[$this->primary_key];
+        }
+
+        // Normalize
         $term = $this->normalize_term($term);
 
-        return $this->trash_it($term, false);
+        return $this->trash_it(false, $term);
     }
 
     /* -----------------------------------------------------------------------
@@ -276,26 +342,23 @@ class Model extends CI_Model
      * -----------------------------------------------------------------------*/
 
     /**
-     * Count all rows
+     * Get data results
      *
-     * @param   bool  $with_deleted  Including deleted data?
-     * @return  int
+     * @return object
      */
-    public function count($with_deleted = null)
+    public function result()
     {
-        if (false === $this->has_table()) return false;
+        return $this->_results;
+    }
 
-        if ($this->count === 0) {
-            $with_deleted !== null or $with_deleted = (! $this->is_destructive);
-
-            if (false === $with_deleted) {
-                $db = $this->db->where($this->deletion_key, 0);
-            }
-
-            $this->count = $db->count_all_results($this->table);
-        }
-
-        return $this->count;
+    /**
+     * Get table primary key
+     *
+     * @return string
+     */
+    public function primary()
+    {
+        return $this->primary_key;
     }
 
     /**
@@ -318,11 +381,36 @@ class Model extends CI_Model
      * @param   bool  $flag  Only true or false should be passed
      * @return  bool
      */
-    public function trash_it($term, $flag = true)
+    public function trash_it($flag = true, $term = null)
     {
-        return $this->edit($term, [
-            $this->deletion_key => (int) $flag
-        ] + $this->timestamp('modification'));
+        return $this->edit([$this->deletion_key => (int) $flag], $term);
+    }
+
+    /**
+     * Count all rows
+     *
+     * @param   bool  $with_deleted  Including deleted data?
+     * @return  int
+     */
+    public function count($with_deleted = null)
+    {
+        if (false === $this->has_table()) return false;
+
+        if ($this->_results) {
+            $this->count = count($this->_results);
+        }
+
+        if ($this->count === 0) {
+            $with_deleted !== null or $with_deleted = (! $this->is_destructive);
+
+            if (false === $with_deleted) {
+                $db = $this->db->where($this->deletion_key, 0);
+            }
+
+            $this->count = $db->count_all_results($this->table);
+        }
+
+        return $this->count;
     }
 
     /**
@@ -332,7 +420,7 @@ class Model extends CI_Model
      * @param   int     $user_id  ID of user who did it
      * @return  array
      */
-    public function timestamp($state = 'modification', $user_id = null)
+    protected function timestamp($state = 'modification', $user_id = null)
     {
         if ( ! in_array($state, ['creation', 'modification'])) {
             $this->set_error('Unsupported timestamp state '.$state, true);
