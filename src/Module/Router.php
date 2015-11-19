@@ -37,12 +37,7 @@ class Router extends CI_Router
     }
 
     /**
-     * Validates the supplied segments.  Attempts to determine the path to
-     * the controller.
-     *
-     * @access private
-     * @param  array
-     * @return array
+     * {inheritdoc}
      */
     protected function _validate_request($segments)
     {
@@ -67,65 +62,28 @@ class Router extends CI_Router
         return parent::_validate_request($segments);
     }
 
-    protected function _set_routing()
-    {
-        foreach ($this->module->getList('module') as $module) {
-            $routesConfigPath = $this->module->getModPath($module->name) . 'config/routes.php';
-            if (file_exists($routesConfigPath)) {
-                include $routesConfigPath;
-                $route = (!isset($route) or !is_array($route)) ? [] : $route;
-                $this->routes += $route;
-                unset($route);
-            }
-        }
-
-        parent::_set_routing();
-    }
-
     /**
-     * Parse Routes
-     *
-     * This function matches any routes that may exist in
-     * the config/routes.php file against the URI to
-     * determine if the class/method need to be remapped.
-     *
-     * NOTE: The first segment must stay the name of the
-     * module, otherwise it is impossible to detect
-     * the current module in this method.
-     *
-     * @access private
-     * @return void
+     * {inheritdoc}
      */
     protected function _parse_routes()
     {
         // Apply the current module's routing config
-        // CI v3.x has URI starting at segment 1
-        // $segstart = (intval(substr(CI_VERSION, 0, 1)) > 2) ? 1 : 0;
-
-        // if (
-        //     ($firstSegment = $this->uri->segment($segstart)) &&
-        //     ($module = $this->module->get($firstSegment)) !== null
-        // ) {
-        //     $configRoutes = $module->path . 'mod/config/routes.php';
-        //     if (is_file($configRoutes)) {
-        //         include $configRoutes;
-        //         $route = (!isset($route) or !is_array($route)) ? [] : $route;
-        //         $this->routes = array_merge($this->routes, $route);
-        //         unset($route);
-        //     }
-        // }
+        foreach ($this->module->getList('module') as $module) {
+            $mod_path = $this->module->getModPath($module->name);
+            if (file_exists($mod_path.'config/routes.php')) {
+                include $mod_path.'config/routes.php';
+                $route = (!isset($route) or !is_array($route)) ? [] : $route;
+                $this->routes = array_merge($route, $this->routes);
+                unset($route);
+            }
+        }
 
         // Let parent do the heavy routing
         return parent::_parse_routes();
-
-        // var_dump($this->uri->segments);
     }
 
     /**
-     * The logic of locating a controller is grouped in this function
-     *
-     * @param  array
-     * @return array
+     * {inheritdoc}
      */
     public function locate($segments)
     {
@@ -134,7 +92,11 @@ class Router extends CI_Router
             return (intval(substr(CI_VERSION, 0, 1)) > 2) ? ucfirst($cn) : $cn;
         };
 
-        // var_dump($this->routes);
+        if ($mod_sgmt = array_search($segments, $this->routes) !== false) {
+            $segments = $mod_sgmt;
+        }
+
+        // var_dump($segments);
         list($firstSegment, $directory, $controller) = array_pad($segments, 3, null);
 
         // var_dump($this->uri->segments);
@@ -226,13 +188,7 @@ class Router extends CI_Router
     }
 
     /**
-     * Set default controller
-     *
-     * First we check in normal APPPATH/controller's location,
-     * then in Modules named after the default_controller
-     * @author hArpanet - based on system/core/Router.php
-     *
-     * @return void
+     * {inheritdoc}
      */
     protected function _set_default_controller()
     {

@@ -24,7 +24,7 @@ class Auth extends PublicController
 
     public function resend()
     {
-        $this->verify_logged_in();
+        // $this->verify_logged_in();
 
         $this->load->view('welcome', $this->data);
     }

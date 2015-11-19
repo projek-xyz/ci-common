@@ -5,14 +5,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * Setup default routes for authentication library.
  */
 $config['routes'] = [
-    'dashboard' => '',
-    'login'     => 'common/login',
-    'logout'    => 'common/logout',
-    'register'  => 'common/register',
-    'activate'  => 'common/activate',
-    'resend'    => 'common/resend',
-    'forgot'    => 'common/forgot',
-    'reset'     => 'common/reset',
+    'dashboard' => 'admin',
+    'login'     => 'login',
+    'logout'    => 'logout',
+    'register'  => 'register',
+    'activate'  => 'activate',
+    'resend'    => 'resend',
+    'forgot'    => 'forgot',
+    'reset'     => 'reset',
 ];
 
 /**
