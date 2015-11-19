@@ -6,18 +6,59 @@ use Projek\CI\Common\Library;
 class Auths extends Library
 {
     /**
+     * Basic configurations
+     *
+     * @var array
+     */
+    protected $configs = [];
+
+    /**
      * class constructor
      */
     public function __construct()
     {
-        $this->load->language('common/auths');
-        $this->load->helper('common/auths');
+        $this->load->language('auths');
+        $this->load->helper('auths');
+
+        $this->load->library('session');
+
+        // Initializing configurations
+        $this->initialize();
 
         if (!$this->is_logged_in()) {
             $this->validate_autologin();
         }
 
         log_message('debug', 'Authentication library initiated');
+    }
+
+    public function initialize()
+    {
+        $configs = [];
+
+        if ($this->load->config('common/auths', true, true)) {
+            $configs = $this->config->item('common/auths');
+        }
+
+        if ($this->load->config('auths', true, true)) {
+            $configs = array_merge($configs, $this->config->item('auths'));
+        }
+
+        foreach ($configs as $name => $value) {
+            if (is_array($value)) {
+                foreach ($value as $key => $val) {
+                    $configs[$name.'.'.$key] = $val;
+                }
+                unset($configs[$name]);
+            }
+        }
+
+        $this->configs = $configs;
+    }
+
+    public function config($name)
+    {
+        return $this->configs[$name];
     }
 
     // -------------------------------------------------------------------------
@@ -37,7 +78,7 @@ class Auths extends Library
             'username' => $username,
             'display'  => $username,
             'password' => $password,
-        ], true)
+        ], true);
 
         if (!$user) {
             return false;
@@ -136,6 +177,8 @@ class Auths extends Library
         ]);
 
         $this->session->sess_destroy();
+
+        redirect($this->config('routes.login'));
     }
 
     /**
@@ -145,11 +188,11 @@ class Auths extends Library
      */
     public function is_logged_in()
     {
-        return (bool) $this->get_current('status') === true;
+        return (bool) $this->session->userdata('status') === true;
     }
 
     // -------------------------------------------------------------------------
-    // Token
+    // Helpers
     // -------------------------------------------------------------------------
 
     /**
@@ -160,7 +203,7 @@ class Auths extends Library
     protected function random_strings()
     {
         $cookie_name = $this->config->item('sess_cookie_name');
-        return substr(md5(uniqid(mt_rand().$this->input->cookie($cookie_name))), 0, 16)
+        return substr(md5(uniqid(mt_rand().$this->input->cookie($cookie_name))), 0, 16);
     }
 
     // -------------------------------------------------------------------------
@@ -169,6 +212,8 @@ class Auths extends Library
 
     /**
      * Logging in user automaticaly when their cookies is valid
+     *
+     * @param string $value
      */
     public function set_autologin($value)
     {
@@ -187,6 +232,16 @@ class Auths extends Library
         if ($cookies) {
             return unserialize($cookies);
         }
+    }
+
+    /**
+     * Validate autologin data
+     *
+     * @return void
+     */
+    public function validate_autologin()
+    {
+        return;
     }
 
     /**

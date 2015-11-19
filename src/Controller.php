@@ -19,7 +19,7 @@ class Controller extends CI_Controller
 
         if (!is_cli()) {
             // Load libraries & drivers
-            $this->load->library('session');
+            $this->load->library('auths');
 
             // Use Redis cache
             $this->load->driver('cache', [
