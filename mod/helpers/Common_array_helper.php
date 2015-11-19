@@ -22,3 +22,18 @@ if (! function_exists('array_set_defaults')) {
         return $array;
     }
 }
+
+if (! function_exists('is_array_assoc')) {
+    /**
+     * Determine is $array an associative
+     *
+     * @param  array $array Array to check
+     * @return bool
+     */
+    function is_array_assoc(array $array) {
+        $array = array_keys($array);
+        $array = array_filter($array, 'is_string');
+
+        return (bool) count($array);
+    }
+}
