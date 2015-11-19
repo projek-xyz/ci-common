@@ -40,13 +40,14 @@ class Controller extends CI_Controller
             $lang = $this->config->item('language');
 
             $code = array_search($lang, $codes) ?: 'en';
-            $this->views->add_data(['lang' => $code]);
         } else {
-            $this->views->add_data(['lang' => 'en']);
+            $code = 'en';
         }
 
-        $charset = strtolower($this->config->item('charset'));
-        $this->views->add_data(['charset' => $charset]);
+        $this->views->add_data([
+            'lang' => $code,
+            'charset' => strtolower($this->config->item('charset')),
+        ]);
     }
 
     /**

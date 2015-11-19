@@ -1,7 +1,7 @@
 <?php
-use Projek\CI\Common\Controller\PublicController;
+use Projek\CI\Common\Controller;
 
-class Auth extends PublicController
+class Auth extends Controller
 {
     public function index()
     {
