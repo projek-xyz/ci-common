@@ -95,7 +95,7 @@ class Migration extends Commands
         $current = $this->CI->migration->get_version();
 
         if ($this->is_latest()) {
-            return $this->print_latest();
+            return $this->print_latest($current, $console);
         }
 
         $console->out(
@@ -107,7 +107,7 @@ class Migration extends Commands
     protected function jump_to($version = 0, $console)
     {
         if ($this->is_latest()) {
-            return $this->print_latest();
+            return $this->print_latest($current, $console);
         }
 
         if (!$version) {
@@ -129,11 +129,10 @@ class Migration extends Commands
         return ($current == $latest);
     }
 
-    private function print_latest($console)
+    private function print_latest($current, $console)
     {
-        $console->out('<green>'.Cli::lang('console_migration_label_latest').'</green>');
         return $console->out(
-            sprintf(Cli::lang('console_migration_label_which'), '<green>'.$current.'</green>')
+            sprintf(Cli::lang('console_migration_label_latest'), '<green>'.$current.'</green>')
         );
     }
 }

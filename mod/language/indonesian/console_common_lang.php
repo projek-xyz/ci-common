@@ -11,8 +11,7 @@ $lang['console_migration_arg_to'] = 'Migrasi ke versi tertentu. Lihat --list unt
 
 $lang['console_migration_label_version'] = 'Versi';
 $lang['console_migration_label_filename'] = 'Nama file';
-$lang['console_migration_label_latest'] = 'Anda sudah ada dalam versi terakhir';
-$lang['console_migration_label_which'] = 'Yaitu: %s';
+$lang['console_migration_label_latest'] = 'Anda sudah ada dalam versi terakhir. Yaitu: %s';
 $lang['console_migration_label_installed'] = 'Versi yang telah anda install: %s';
 $lang['console_migration_label_help'] = 'Gunakan --help untuk info lebih lanjut';
 $lang['console_migration_label_migrated'] = 'Selesai! telah bermigrasi ke versi %s';
