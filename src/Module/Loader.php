@@ -106,6 +106,50 @@ class Loader extends CI_Loader
     }
 
     /**
+     * Class Loader
+     *
+     * This function lets users load and instantiate classes.
+     * It is designed to be called from a user's app controllers.
+     *
+     * @param   string  the name of the class
+     * @param   mixed   the optional parameters
+     * @param   string  an optional object name
+     * @return  void
+     */
+    public function library($library = '', $params = null, $object_name = null)
+    {
+        if (is_array($library)) {
+            foreach ($library as $key => $value) {
+                if (is_int($key)) {
+                    $this->library($value, $params);
+                } else {
+                    $this->library($key, $params, $value);
+                }
+            }
+
+            return $this;
+        }
+
+        // Detect module
+        if (list($module, $class) = $this->module->detect($library)) {
+            // Module already loaded
+            if (!$this->module->loaded($module)) {
+                // Add module
+                $this->module->add($this, $module);
+            }
+
+            // Let parent do the heavy work
+            $void = parent::library($class, $params, $object_name);
+            // Remove module
+            $this->module->remove($this);
+
+            return $void;
+        } else {
+            return parent::library($library, $params, $object_name);
+        }
+    }
+
+    /**
      * Load Widget
      *
      * This function provides support to Jens Segers Template Library for loading

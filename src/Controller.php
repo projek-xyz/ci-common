@@ -30,22 +30,20 @@ class Controller extends CI_Controller
         }
 
         // Set default data keys
-        $this->data['page_name'] = '';
-        $this->data['path_name'] = '';
+        $this->views->add_data(['page_name' => 'Aplikasi']);
+        $this->views->add_data(['path_name' => '']);
 
         if ($this->load->config('common/lang_codes', true, true)) {
             $codes = $this->config->item('common/lang_codes', 'lang_codes');
             $lang = $this->config->item('language');
 
-            if (($code = array_search($lang, $code)) !== false) {
-                $this->data['lang'] = $code;
-            } else {
-                $this->data['lang'] = 'en';
-            }
+            $code = array_search($lang, $codes) ?: 'en';
+            $this->views->add_data(['lang' => $code]);
         } else {
-            $this->data['lang'] = 'en';
+            $this->views->add_data(['lang' => 'en']);
         }
 
-        $this->data['charset'] = $this->config->item('charset');
+        $charset = strtolower($this->config->item('charset'));
+        $this->views->add_data(['charset' => $charset]);
     }
 }

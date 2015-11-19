@@ -7,15 +7,19 @@ class Loader extends Module\Loader
     {
         parent::__construct();
 
-        $this->views = new Views($this->module);
+        $CI =& get_instance();
+        $CI->views = new Views($this->module);
     }
 
+    /**
+     * {inheritdoc}
+     */
     public function view($view, $vars = [], $return = false)
     {
-        $this->views->addData($this->_ci_cached_vars);
-
         $CI =& get_instance();
-        $contents = $this->views->render($view, $vars = []);
+
+        $CI->views->add_data($this->_ci_cached_vars);
+        $contents = $CI->views->render($view, $vars = []);
         $CI->output->append_output($contents);
 
         return $this;

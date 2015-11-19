@@ -53,7 +53,7 @@ class Views
      * @param  string $templates Template
      * @return League\Plates\Engine
      */
-    public function addData(array $data, $templates = null)
+    public function add_data(array $data, $templates = null)
     {
         $this->engine->addData($data, $templates);
 
@@ -67,7 +67,7 @@ class Views
      * @param string $directory Folder path
      * @param bool   $fallback  Folder falback
      */
-    public function addFolder($name, $directory, $fallback = false)
+    public function add_folder($name, $directory, $fallback = false)
     {
         $this->engine->addFolder($name, $directory, $fallback);
 
@@ -80,7 +80,7 @@ class Views
      * @param  string $name Folder name
      * @return League\Plates\Engine
      */
-    public function removeFolder($name)
+    public function remove_folder($name)
     {
         $this->engine->removeFolder($name);
 
