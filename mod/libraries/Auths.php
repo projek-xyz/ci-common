@@ -177,8 +177,6 @@ class Auths extends Library
         ]);
 
         $this->session->sess_destroy();
-
-        redirect($this->config('routes.login'));
     }
 
     /**
@@ -204,6 +202,18 @@ class Auths extends Library
     {
         $cookie_name = $this->config->item('sess_cookie_name');
         return substr(md5(uniqid(mt_rand().$this->input->cookie($cookie_name))), 0, 16);
+    }
+
+    /**
+     * Redirect url to url based on Auth config routes
+     *
+     * @param  string $route
+     * @return void
+     */
+    public function redirect($route)
+    {
+        $route = $this->config('routes.'.$route);
+        redirect($route);
     }
 
     // -------------------------------------------------------------------------

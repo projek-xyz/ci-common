@@ -30,8 +30,10 @@ class Controller extends CI_Controller
         }
 
         // Set default data keys
-        $this->views->add_data(['page_name' => 'Aplikasi']);
-        $this->views->add_data(['path_name' => '']);
+        $this->views->add_data([
+            'page_name' => 'Aplikasi',
+            'path_name' => '/',
+        ]);
 
         if ($this->load->config('common/lang_codes', true, true)) {
             $codes = $this->config->item('common/lang_codes', 'lang_codes');
@@ -45,5 +47,33 @@ class Controller extends CI_Controller
 
         $charset = strtolower($this->config->item('charset'));
         $this->views->add_data(['charset' => $charset]);
+    }
+
+    /**
+     * Verify login credentials
+     *
+     * @return void
+     */
+    protected function verify_login()
+    {
+        if (! $this->auths->is_logged_in()) {
+            $this->auths->redirect('login');
+        } elseif (! $this->auths->is_logged_in(false)) {
+            $this->auths->redirect('resend');
+        }
+    }
+
+    /**
+     * Verify login credentials
+     *
+     * @return void
+     */
+    protected function verify_logged_in()
+    {
+        if ($this->auths->is_logged_in()) {
+            $this->auths->redirect('dashboard');
+        } elseif (! $this->auths->is_logged_in(false)) {
+            $this->auths->redirect('resend');
+        }
     }
 }

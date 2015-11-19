@@ -39,7 +39,7 @@ class Auth extends PublicController
     public function activate($email_key = null, $user_id = null)
     {
         if (is_null($email_key)) {
-            $this->redirect_to('login');
+            $this->auths->redirect('login');
         }
 
         $this->load->view('welcome', $this->data);
@@ -48,14 +48,23 @@ class Auth extends PublicController
     public function reset($email_key = null, $user_id = null)
     {
         if (is_null($email_key)) {
-            $this->redirect_to('login');
+            $this->auths->redirect('login');
         }
 
         $this->load->view('welcome', $this->data);
     }
 
+    /**
+     * Logout current user
+     *
+     * @return void
+     */
     public function logout()
     {
+        // Clean up user data
         $this->auths->logout();
+
+        // Back to login page
+        $this->auths->redirect('login');
     }
 }
