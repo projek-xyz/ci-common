@@ -45,36 +45,6 @@ class Loader extends CI_Loader
     }
 
     /**
-     * {inheritdoc}
-     */
-    public function language($file = [], $lang = '') {
-        if (is_array($file)) {
-            foreach ($file as $langfile) {
-                $this->language($langfile, $lang);
-            }
-            return;
-        }
-
-        // Detect module
-        if (list($module, $class) = $this->module->detect($file)) {
-            // Module already loaded
-            if (!$this->module->loaded($module)) {
-                // Add module
-                $this->module->add($this, $module);
-            }
-
-            // Let parent do the heavy work
-            $void = parent::language($class, $lang);
-            // Remove module
-            $this->module->remove($this);
-
-            return $void;
-        } else {
-            return parent::language($file, $lang);
-        }
-    }
-
-    /**
      * Controller Loader
      *
      * This function lets users load and hierarchical controllers to enable HMVC support
@@ -106,15 +76,7 @@ class Loader extends CI_Loader
     }
 
     /**
-     * Class Loader
-     *
-     * This function lets users load and instantiate classes.
-     * It is designed to be called from a user's app controllers.
-     *
-     * @param   string  the name of the class
-     * @param   mixed   the optional parameters
-     * @param   string  an optional object name
-     * @return  void
+     * {inheritdoc}
      */
     public function library($library = '', $params = null, $object_name = null)
     {
@@ -146,6 +108,66 @@ class Loader extends CI_Loader
             return $void;
         } else {
             return parent::library($library, $params, $object_name);
+        }
+    }
+
+    /**
+     * {inheritdoc}
+     */
+    public function helper($helper = []) {
+        if (is_array($helper)) {
+            foreach ($helper as $file) {
+                $this->helper($file);
+            }
+            return;
+        }
+
+        // Detect module
+        if (list($module, $class) = $this->module->detect($helper)) {
+            // Module already loaded
+            if (!$this->module->loaded($module)) {
+                // Add module
+                $this->module->add($this, $module);
+            }
+
+            // Let parent do the heavy work
+            $void = parent::helper($class);
+            // Remove module
+            $this->module->remove($this);
+
+            return $void;
+        } else {
+            return parent::helper($helper);
+        }
+    }
+
+    /**
+     * {inheritdoc}
+     */
+    public function language($file = [], $lang = '') {
+        if (is_array($file)) {
+            foreach ($file as $langfile) {
+                $this->language($langfile, $lang);
+            }
+            return;
+        }
+
+        // Detect module
+        if (list($module, $class) = $this->module->detect($file)) {
+            // Module already loaded
+            if (!$this->module->loaded($module)) {
+                // Add module
+                $this->module->add($this, $module);
+            }
+
+            // Let parent do the heavy work
+            $void = parent::language($class, $lang);
+            // Remove module
+            $this->module->remove($this);
+
+            return $void;
+        } else {
+            return parent::language($file, $lang);
         }
     }
 

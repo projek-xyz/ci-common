@@ -17,13 +17,10 @@ use Projek\CI\Common\Module;
 class Router extends CI_Router
 {
     /**
-     * Current module name
+     * Current module instance
      *
-     * @var string
-     * @access public
+     * @var \Projek\CI\Common\Module
      */
-    // public $module = '';
-
     protected $module;
 
     /**

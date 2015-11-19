@@ -33,8 +33,6 @@ class Users extends Model
             $data['photo'] = '//www.gravatar.com/avatar/'.md5($data['email']);
         }
 
-        $this->load->library('security');
-
         $salt = $this->security->get_random_bytes();
         $user = [
             'username'  => $data['username'],
@@ -62,6 +60,7 @@ class Users extends Model
             $this->load->model('users_details');
             $this->load->model('users_groups');
             $this->load->model('users_perms');
+
             $results = (array) $data->result();
 
             // Get detail object from user.
