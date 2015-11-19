@@ -15,7 +15,7 @@ class Controller extends CI_Controller
         // $this->load->language('common/app_common');
 
         // Load common used helpers
-        $this->load->helper('url', 'html');
+        $this->load->helper(['url', 'html']);
 
         if (!is_cli()) {
             // Load libraries & drivers

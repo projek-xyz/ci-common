@@ -114,7 +114,8 @@ class Loader extends CI_Loader
     /**
      * {inheritdoc}
      */
-    public function helper($helper = []) {
+    public function helper($helper = [])
+    {
         if (is_array($helper)) {
             foreach ($helper as $file) {
                 $this->helper($file);
@@ -122,8 +123,19 @@ class Loader extends CI_Loader
             return;
         }
 
-        // Detect module
-        if (list($module, $class) = $this->module->detect($helper)) {
+        // Detect helper from system
+        $extension = '_helper.php';
+        if (file_exists(BASEPATH.'helpers/'.$helper.$extension)) {
+            foreach ($this->module->getList('module') as $module) {
+                $mod_path = $this->module->getModPath($module->name);
+                if (file_exists($mod_path.'helpers/'.$helper.$extension)) {
+                    $this->helper($module->name.'/'.$helper);
+                }
+            }
+        }
+
+        // Detect helpers from module
+        if (list($module, $file) = $this->module->detect($helper)) {
             // Module already loaded
             if (!$this->module->loaded($module)) {
                 // Add module
@@ -131,7 +143,7 @@ class Loader extends CI_Loader
             }
 
             // Let parent do the heavy work
-            $void = parent::helper($class);
+            $void = parent::helper($file);
             // Remove module
             $this->module->remove($this);
 
@@ -144,7 +156,8 @@ class Loader extends CI_Loader
     /**
      * {inheritdoc}
      */
-    public function language($file = [], $lang = '') {
+    public function language($file = [], $lang = '')
+    {
         if (is_array($file)) {
             foreach ($file as $langfile) {
                 $this->language($langfile, $lang);
@@ -184,7 +197,6 @@ class Loader extends CI_Loader
      */
     public function widget($widget)
     {
-
         // Detect module
         if (list($module, $widget) = $this->module->detect($widget)) {
             // Module already loaded
