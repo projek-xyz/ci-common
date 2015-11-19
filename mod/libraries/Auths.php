@@ -11,6 +11,7 @@ class Auths extends Library
     public function __construct()
     {
         $this->load->language('common/auths');
+        $this->load->helper('common/auths');
 
         if (!$this->is_logged_in()) {
             $this->validate_autologin();
