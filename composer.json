@@ -46,6 +46,10 @@
         "phpunit/phpunit": "~4.0",
         "phpunit/dbunit": "~1.4.0"
     },
+    "suggest": {
+        "phpunit/phpunit": "~4.0",
+        "phpunit/dbunit": "~1.4.0"
+    },
     "minimum-stability": "dev",
     "prefer-stable": true
 }
