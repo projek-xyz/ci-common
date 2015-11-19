@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?php echo $this->e($lang) ?>">
 <head>
-    <meta charset="utf-8">
-    <title>Welcome to CodeIgniter Skeleton</title>
+    <meta charset="<?php echo $this->e($charset) ?>">
+    <title><?php echo $this->e($page_name) ?></title>
 
-    <?=$this->insert('common::shared/favicons')?>
+    <?php echo $this->insert('common::shared/favicons') ?>
 
     <link rel="stylesheet" href="<?php echo base_url('assets/styles/main.css') ?>">
 </head>
 <body>
 
-<?=$this->section('content')?>
+<?php echo $this->section('content') ?>
 
 </body>
 </html>
