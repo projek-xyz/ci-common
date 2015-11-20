@@ -106,6 +106,11 @@ class Model extends CI_Model implements Countable
 
     public function __construct()
     {
+        if (!getenv('APP_DB_NAME')) {
+            log_message('error', 'Database not configured, please run \'./app/cli install\' from root dir.');
+            return false;
+        }
+
         if (!isset($this->db)) {
             // Just in case it's not been loaded.
             $this->load->database();
