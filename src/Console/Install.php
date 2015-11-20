@@ -21,12 +21,6 @@ class Install extends Commands
                 'longPrefix' => 'help',
                 'description' => Cli::lang('console_display_help'),
                 'noValue' => true
-            ],
-            'noninteractive' => [
-                'prefix' => 'n',
-                'longPrefix' => 'noninteractive',
-                'description' => 'Run non interactively',
-                'noValue' => true
             ]
         ]);
     }
@@ -41,13 +35,20 @@ class Install extends Commands
             return $this->setup_heroku($console);
         }
 
+        if (!$console->hasSttyAvailable()) {
+            $console->out('<bold><underline>Your have no instactive shell available.</underline></bold>');
+            $console->out('<bold>Please run "<yellow>./app/cli install</yellow>" manualy.</bold>');
+            $console->br();
+            return false;
+        }
+
         if ($this->setup_config($console) === true) {
             $console->out('<bold><underline>New .env generated</underline></bold>');
             // $this->CI->load->library('migration');
             $this->setup_server($console);
-
-            return $console->out('<green>'.Cli::lang('console_install_done').'</green>');
         }
+
+        return $console->out('<green>'.Cli::lang('console_install_done').'</green>');
     }
 
     /**
@@ -61,13 +62,6 @@ class Install extends Commands
         if (file_exists(APPPATH.'.env')) {
             $console->out('You already have .env in your APPPATH.');
             return true;
-        }
-
-        $arg = $console->argument_manager();
-
-        if ($arg->defined('noninteractive')) {
-            $console->out('<bold>Your have no instactive shell. please run <yellow>./app/cli install</yellow> manualy</bold>');
-            return false;
         }
 
         $console->out('<bold><underline>we need to create the main configuration.</underline></bold>');
