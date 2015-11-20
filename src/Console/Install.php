@@ -31,21 +31,26 @@ class Install extends Commands
     public function execute(Cli $console)
     {
         if (getenv('DYNO')) {
-            $console->out('Heroku environments detected');
+            $console->out(Cli::lang('console_install_heroku_env'));
             return $this->setup_heroku($console);
         }
 
         if (!$console->hasSttyAvailable()) {
-            $console->out('<bold><underline>Your have no instactive shell available.</underline></bold>');
-            $console->out('<bold>Please run "<yellow>./app/cli install</yellow>" manualy.</bold>');
+            $console->out(Cli::lang('console_install_interactive'));
+            $console->out(Cli::lang('console_install_manualy'));
             $console->br();
             return false;
         }
 
         if ($this->setup_config($console) === true) {
-            $console->out('<bold><underline>New .env generated</underline></bold>');
+            $console->out('<bold><underline>'.Cli::lang('console_install_env_ready').'</underline></bold>');
             // $this->CI->load->library('migration');
-            $this->setup_server($console);
+            $server = $console->radio(
+                Cli::lang('console_install_setup_server'),
+                ['apache', 'nginx']
+            ) ?: 'apache';
+
+            call_user_func([$this, 'setup_'.$server], $console);
         }
 
         return $console->out('<green>'.Cli::lang('console_install_done').'</green>');
@@ -60,18 +65,18 @@ class Install extends Commands
     protected function setup_config(Cli $console)
     {
         if (file_exists(APPPATH.'.env')) {
-            $console->out('You already have .env in your APPPATH.');
+            $console->out(Cli::lang('console_install_env_already'));
             return true;
         }
 
-        $console->out('<bold><underline>we need to create the main configuration.</underline></bold>');
+        $console->out('<bold><underline>'.Cli::lang('console_install_setup_intro').'</underline></bold>');
 
-        $base_url = $console->input('   Application base url: ', '/');
-        $db_host  = $console->input('      Database Hostname: ', 'localhost');
-        $db_user  = $console->input('      Database Username: ', 'root');
-        $db_pass  = $console->password('      Database Password: ');
-        $db_name  = $console->input('          Database Name: ');
-        $db_pref  = $console->input('  Database Table Prefix: ', 'app_');
+        $base_url = $console->input(Cli::lang('console_install_setup_appurl'), '/');
+        $db_host  = $console->input(Cli::lang('console_install_setup_dbhost'), 'localhost');
+        $db_user  = $console->input(Cli::lang('console_install_setup_dbuser'), 'root');
+        $db_pass  = $console->password(Cli::lang('console_install_setup_dbpass'));
+        $db_name  = $console->input(Cli::lang('console_install_setup_dbname'));
+        $db_pref  = $console->input(Cli::lang('console_install_setup_dbpref'), 'app_');
 
         $replacement = [
             'APP_BASE_URL=\'/\'' => 'APP_BASE_URL=\''.$base_url.'\'',
@@ -96,22 +101,6 @@ class Install extends Commands
     }
 
     /**
-     * Setup server configuration
-     *
-     * @param  Projek\CI\Console\Cli $console CLI instance
-     * @return Projek\CI\Console\Cli
-     */
-    protected function setup_server(Cli $console)
-    {
-        $server = $console->radio(
-            '  What is your server application: ',
-            ['apache', 'nginx']
-        ) ?: 'apache';
-
-        return call_user_func([$this, 'setup_'.$server], $console);
-    }
-
-    /**
      * Setup Procfile for heroku environment
      *
      * @param  Projek\CI\Console\Cli $console CLI instance
@@ -120,7 +109,7 @@ class Install extends Commands
     protected function setup_heroku(Cli $console)
     {
         if (file_exists(FCPATH.'Procfile')) {
-            return $console->out('Procfile already generated');
+            return $console->out(Cli::lang('console_install_heroku_already'));
         }
 
         $file = fopen(FCPATH.'Procfile', 'w');
@@ -128,7 +117,7 @@ class Install extends Commands
         fwrite($file, $content);
         fclose($file);
 
-        return $console->out('New Procfile generated');
+        return $console->out(Cli::lang('console_install_heroku_ready'));
     }
 
     /**
@@ -141,7 +130,7 @@ class Install extends Commands
     protected function setup_apache(Cli $console, $rewriteBase = '/')
     {
         if (file_exists(FCPATH.'public/.htaccess')) {
-            return $console->out('You already have .htaccess in your public dir');
+            return $console->out(Cli::lang('console_install_apache_already'));
         }
 
         $content = <<<HTACCESS
@@ -165,7 +154,7 @@ HTACCESS;
         fwrite($file, $content);
         fclose($file);
 
-        return $console->out('.htaccess generated in your public dir');
+        return $console->out(Cli::lang('console_install_apache_ready'));
     }
 
     /**
@@ -176,6 +165,6 @@ HTACCESS;
      */
     protected function setup_nginx(Cli $console)
     {
-        return $console->out('currently we have no pre-installed config for nginx');
+        return $console->out(Cli::lang('console_install_nginx_ready'));
     }
 }
