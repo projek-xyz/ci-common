@@ -22,11 +22,11 @@ class Controller extends CI_Controller
             $this->load->library('common/auths');
 
             // Use Redis cache
-            $this->load->driver('cache', [
-                'adapter'    => 'redis',
-                'backup'     => 'file',
-                'key_prefix' => 'creasi_'
-            ]);
+            // $this->load->driver('cache', [
+            //     'adapter'    => 'redis',
+            //     'backup'     => 'file',
+            //     'key_prefix' => 'creasi_'
+            // ]);
         }
 
         // Set default data keys
