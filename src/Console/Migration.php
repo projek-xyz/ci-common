@@ -46,10 +46,9 @@ class Migration extends Commands
     /**
      * {inheridoc}
      */
-    public function execute(Cli $console)
+    public function execute(Cli $console, Manager $arguments)
     {
         $this->CI->load->library('migration');
-        $arguments = $console->argument_manager();
 
         if ($arguments->defined('list')) {
             $this->get_current($console);
