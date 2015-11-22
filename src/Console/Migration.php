@@ -77,12 +77,25 @@ class Migration extends Commands
     {
         $table = [];
         $migrations = $this->CI->migration->find_migrations();
+        $type = config_item('migration_type');
+
+        if ($type === null) {
+            @include APPPATH.'config/migration.php';
+            $type = isset($config['migration_type']) ? $config['migration_type'] : 'sequential';
+        }
+
+        $use_timestamp = $this->CI->config->item('migration_type') == 'timestamp' ? true : false;
 
         foreach ($migrations as $version => $file) {
             $file = explode('_', basename($file, '.php'));
             array_shift($file);
+
+            if ($type == 'timestamp') {
+                $version = date('d-m-Y h:m:s', strtotime($version));
+            }
+
             $table[] = [
-                Cli::lang('console_migration_label_version') => $version,
+                Cli::lang('console_migration_label_version') => $version ,
                 Cli::lang('console_migration_label_filename') => implode(' ', $file),
             ];
         }

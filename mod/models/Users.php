@@ -33,7 +33,7 @@ class Users extends Model
             $data['photo'] = '//www.gravatar.com/avatar/'.md5($data['email']);
         }
 
-        $salt = $this->security->get_random_bytes();
+        $salt = $this->security->get_random_bytes(22);
         $user = [
             'username'  => $data['username'],
             'email'     => $data['email'],
@@ -43,6 +43,11 @@ class Users extends Model
             'assign_to' => $data['group'],
             'photo'     => $data['photo'],
         ];
+
+        if ($this->count() === 0) {
+            $user['activate'] = 1;
+            $user['assign_to'] = 1;
+        }
 
         $added = parent::add($user, $return_obj);
 
