@@ -6,7 +6,7 @@
 
     <?php echo $this->insert('common::shared/favicons') ?>
 
-    <link rel="stylesheet" href="<?php echo base_url('assets/styles/main.css') ?>">
+    <link rel="stylesheet" href="<?php echo base_url('asset/styles/main.css') ?>">
 </head>
 <body>
 
