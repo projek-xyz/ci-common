@@ -28,7 +28,7 @@ class Install extends Commands
     /**
      * {inheridoc}
      */
-    public function execute(Cli $console)
+    public function execute(Cli $console, Manager $arguments = null)
     {
         if (getenv('DYNO')) {
             $console->out(Cli::lang('console_install_heroku_env'));
