@@ -46,7 +46,7 @@ class Migration extends Commands
     /**
      * {inheridoc}
      */
-    public function execute(Cli $console, Manager $arguments)
+    public function execute(Cli $console, Manager $arguments = null)
     {
         $this->CI->load->library('migration');
 
