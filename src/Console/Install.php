@@ -14,14 +14,7 @@ class Install extends Commands
      */
     public function register(Cli $command)
     {
-        $command->add_arg([
-            'help' => [
-                'prefix' => 'h',
-                'longPrefix' => 'help',
-                'description' => Cli::lang('console_display_help'),
-                'noValue' => true
-            ]
-        ]);
+        // do nothing :P
     }
 
     /**
