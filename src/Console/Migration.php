@@ -3,7 +3,6 @@ namespace Projek\CI\Common\Console;
 
 use Projek\CI\Console\Cli;
 use Projek\CI\Console\Commands;
-use Projek\CI\Console\Arguments\Manager;
 
 class Migration extends Commands
 {
@@ -13,9 +12,9 @@ class Migration extends Commands
     /**
      * {inheridoc}
      */
-    public function register(Manager $arguments)
+    public function register(Cli $command)
     {
-        $arguments->add([
+        $command->add_arg([
             'help' => [
                 'prefix' => 'h',
                 'longPrefix' => 'help',
@@ -46,32 +45,35 @@ class Migration extends Commands
     /**
      * {inheridoc}
      */
-    public function execute(Cli $console, Manager $arguments = null)
+    public function execute(Cli $command)
     {
         $this->CI->load->library('migration');
 
-        if ($arguments->defined('list')) {
-            $this->get_current($console);
+        if ($command->get_arg('list')) {
+            $this->get_current($command);
             if ($table = $this->get_list()) {
-                return $console->table($table);
+                return $command->table($table);
             }
-
-            return $console->dump($this->get_list());
+            return $command->dump($this->get_list());
         }
 
-        if ($arguments->defined('current')) {
-            return $this->get_current($console);
+        if ($command->get_arg('current')) {
+            return $this->get_current($command);
         }
 
-        if ($arguments->defined('to')) {
-            $version = $arguments->get('to');
-
-            return $this->jump_to($version, $console);
+        if ($command->get_arg('to')) {
+            $version = $command->get('to');
+            return $this->jump_to($version, $command);
         }
 
         return false;
     }
 
+    /**
+     * Get migration list
+     *
+     * @return array
+     */
     protected function get_list()
     {
         $table = [];
@@ -102,24 +104,37 @@ class Migration extends Commands
         return $table;
     }
 
-    protected function get_current($console)
+    /**
+     * Get current migration version
+     *
+     * @param  \Projek\CI\Console\Cli $command
+     * @return \Projek\CI\Console\Cli
+     */
+    protected function get_current(Cli $command)
     {
         $current = $this->CI->migration->get_version();
 
         if ($this->is_latest()) {
-            return $this->print_latest($current, $console);
+            return $this->print_latest($current, $command);
         }
 
-        $console->out(
+        $command->out(
             sprintf(Cli::lang('console_migration_label_installed'), '<green>'.$current.'</green>')
         );
-        return $console->out(Cli::lang('console_migration_label_help'));
+        return $command->out(Cli::lang('console_migration_label_help'));
     }
 
-    protected function jump_to($version = 0, $console)
+    /**
+     * Jump to certain version
+     *
+     * @param  int                    $version Migration version
+     * @param  \Projek\CI\Console\Cli $command
+     * @return \Projek\CI\Console\Cli
+     */
+    protected function jump_to($version = 0, $command)
     {
         if ($this->is_latest()) {
-            return $this->print_latest($current, $console);
+            return $this->print_latest($current, $command);
         }
 
         if (!$version) {
@@ -128,22 +143,33 @@ class Migration extends Commands
 
         $this->CI->migration->version($version);
 
-        return $console->out(
+        return $command->out(
             sprintf(Cli::lang('console_migration_label_migrated'), '<green>'.$version.'</green>')
         );;
     }
 
+    /**
+     * Is migration in latest version
+     *
+     * @return bool
+     */
     protected function is_latest()
     {
         $current = $this->CI->migration->get_version();
         $latest  = $this->CI->migration->get_count();
-
         return ($current == $latest);
     }
 
-    private function print_latest($current, $console)
+    /**
+     * Print the latest one
+     *
+     * @param  int                    $current Current version
+     * @param  \Projek\CI\Console\Cli $command
+     * @return \Projek\CI\Console\Cli
+     */
+    private function print_latest($current, $command)
     {
-        return $console->out(
+        return $command->out(
             sprintf(Cli::lang('console_migration_label_latest'), '<green>'.$current.'</green>')
         );
     }

@@ -3,7 +3,6 @@ namespace Projek\CI\Common\Console;
 
 use Projek\CI\Console\Cli;
 use Projek\CI\Console\Commands;
-use Projek\CI\Console\Arguments\Manager;
 
 class Install extends Commands
 {
@@ -13,9 +12,9 @@ class Install extends Commands
     /**
      * {inheridoc}
      */
-    public function register(Manager $arguments)
+    public function register(Cli $command)
     {
-        $arguments->add([
+        $command->add_arg([
             'help' => [
                 'prefix' => 'h',
                 'longPrefix' => 'help',
@@ -28,55 +27,55 @@ class Install extends Commands
     /**
      * {inheridoc}
      */
-    public function execute(Cli $console, Manager $arguments = null)
+    public function execute(Cli $command)
     {
         if (getenv('DYNO')) {
-            $console->out(Cli::lang('console_install_heroku_env'));
-            return $this->setup_heroku($console);
+            $command->out(Cli::lang('console_install_heroku_env'));
+            return $this->setup_heroku($command);
         }
 
-        if (!$console->hasSttyAvailable()) {
-            $console->out(Cli::lang('console_install_interactive'));
-            $console->out(Cli::lang('console_install_manualy'));
-            $console->br();
+        if (!$command->hasSttyAvailable()) {
+            $command->out(Cli::lang('console_install_interactive'));
+            $command->out(Cli::lang('console_install_manualy'));
+            $command->br();
             return false;
         }
 
-        if ($this->setup_config($console) === true) {
-            $console->out('<bold><underline>'.Cli::lang('console_install_env_ready').'</underline></bold>');
+        if ($this->setup_config($command) === true) {
+            $command->out('<bold><underline>'.Cli::lang('console_install_env_ready').'</underline></bold>');
             // $this->CI->load->library('migration');
-            $server = $console->radio(
+            $server = $command->radio(
                 Cli::lang('console_install_setup_server'),
                 ['apache', 'nginx']
             ) ?: 'apache';
 
-            call_user_func([$this, 'setup_'.$server], $console);
+            call_user_func([$this, 'setup_'.$server], $command);
         }
 
-        return $console->out('<green>'.Cli::lang('console_install_done').'</green>');
+        return $command->out('<green>'.Cli::lang('console_install_done').'</green>');
     }
 
     /**
      * Setup Procfile for heroku environment
      *
-     * @param  Projek\CI\Console\Cli $console CLI instance
+     * @param  Projek\CI\Console\Cli $command CLI instance
      * @return Projek\CI\Console\Cli
      */
-    protected function setup_config(Cli $console)
+    protected function setup_config(Cli $command)
     {
         if (file_exists(APPPATH.'.env')) {
-            $console->out(Cli::lang('console_install_env_already'));
+            $command->out(Cli::lang('console_install_env_already'));
             return true;
         }
 
-        $console->out('<bold><underline>'.Cli::lang('console_install_setup_intro').'</underline></bold>');
+        $command->out('<bold><underline>'.Cli::lang('console_install_setup_intro').'</underline></bold>');
 
-        $base_url = $console->input(Cli::lang('console_install_setup_appurl'), '/');
-        $db_host  = $console->input(Cli::lang('console_install_setup_dbhost'), 'localhost');
-        $db_user  = $console->input(Cli::lang('console_install_setup_dbuser'), 'root');
-        $db_pass  = $console->password(Cli::lang('console_install_setup_dbpass'));
-        $db_name  = $console->input(Cli::lang('console_install_setup_dbname'));
-        $db_pref  = $console->input(Cli::lang('console_install_setup_dbpref'), 'app_');
+        $base_url = $command->input(Cli::lang('console_install_setup_appurl'), '/');
+        $db_host  = $command->input(Cli::lang('console_install_setup_dbhost'), 'localhost');
+        $db_user  = $command->input(Cli::lang('console_install_setup_dbuser'), 'root');
+        $db_pass  = $command->password(Cli::lang('console_install_setup_dbpass'));
+        $db_name  = $command->input(Cli::lang('console_install_setup_dbname'));
+        $db_pref  = $command->input(Cli::lang('console_install_setup_dbpref'), 'app_');
 
         $replacement = [
             'APP_BASE_URL=\'/\'' => 'APP_BASE_URL=\''.$base_url.'\'',
@@ -103,13 +102,13 @@ class Install extends Commands
     /**
      * Setup Procfile for heroku environment
      *
-     * @param  Projek\CI\Console\Cli $console CLI instance
+     * @param  Projek\CI\Console\Cli $command CLI instance
      * @return Projek\CI\Console\Cli
      */
-    protected function setup_heroku(Cli $console)
+    protected function setup_heroku(Cli $command)
     {
         if (file_exists(FCPATH.'Procfile')) {
-            return $console->out(Cli::lang('console_install_heroku_already'));
+            return $command->out(Cli::lang('console_install_heroku_already'));
         }
 
         $file = fopen(FCPATH.'Procfile', 'w');
@@ -117,20 +116,20 @@ class Install extends Commands
         fwrite($file, $content);
         fclose($file);
 
-        return $console->out(Cli::lang('console_install_heroku_ready'));
+        return $command->out(Cli::lang('console_install_heroku_ready'));
     }
 
     /**
      * Setup Apache .htaccess
      *
-     * @param  Projek\CI\Console\Cli $console     CLI instance
+     * @param  Projek\CI\Console\Cli $command     CLI instance
      * @param  string                $rewriteBase Apache rewrite base
      * @return Projek\CI\Console\Cli
      */
-    protected function setup_apache(Cli $console, $rewriteBase = '/')
+    protected function setup_apache(Cli $command, $rewriteBase = '/')
     {
         if (file_exists(FCPATH.'public/.htaccess')) {
-            return $console->out(Cli::lang('console_install_apache_already'));
+            return $command->out(Cli::lang('console_install_apache_already'));
         }
 
         $content = <<<HTACCESS
@@ -154,17 +153,17 @@ HTACCESS;
         fwrite($file, $content);
         fclose($file);
 
-        return $console->out(Cli::lang('console_install_apache_ready'));
+        return $command->out(Cli::lang('console_install_apache_ready'));
     }
 
     /**
      * Setup for NginX
      *
-     * @param  Projek\CI\Console\Cli $console CLI instance
+     * @param  Projek\CI\Console\Cli $command CLI instance
      * @return Projek\CI\Console\Cli
      */
-    protected function setup_nginx(Cli $console)
+    protected function setup_nginx(Cli $command)
     {
-        return $console->out(Cli::lang('console_install_nginx_ready'));
+        return $command->out(Cli::lang('console_install_nginx_ready'));
     }
 }
