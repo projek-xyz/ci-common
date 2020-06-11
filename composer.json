@@ -10,13 +10,13 @@
     "authors": [
         {
             "name": "Fery Wardiyanto",
-            "email": "hallo@feryardiant.me",
-            "homepage": "http://feryardiant.me",
+            "email": "feryardiyanto@gmail.com",
             "role": "Developer"
         }
     ],
     "support": {
-        "email": "hallo@feryardiant.me"
+        "issues": "https://github.com/projek-xyz/ci-common/issues",
+        "source": "https://github.com/projek-xyz/ci-common"
     },
     "autoload": {
         "psr-4": {
@@ -33,7 +33,6 @@
     },
     "require": {
         "php": ">=5.4.0",
-        "ext-mcrypt": "*",
         "ext-mbstring": "*",
         "projek-xyz/ci-installer": "dev-master",
         "projek-xyz/ci-console": "dev-master",
@@ -42,7 +41,7 @@
         "vlucas/phpdotenv": "^2.0"
     },
     "require-dev": {
-        "codeigniter/framework": "dev-3.0-stable",
+        "codeigniter/framework": "^3.0",
         "phpunit/phpunit": "~4.0",
         "phpunit/dbunit": "~1.4.0"
     },
